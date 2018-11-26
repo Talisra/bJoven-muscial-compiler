@@ -1,0 +1,35 @@
+.keyword {
+    -fx-fill: seagreen;
+    -fx-font-weight: bold;
+}
+
+.semicolon {
+    -fx-font-weight: bold;
+}
+.paren {
+    -fx-fill: indigo;
+    -fx-font-weight: bold;
+}
+.bracket {
+    -fx-fill: steelblue;
+    -fx-font-weight: bold;
+}
+.brace {
+    -fx-fill: chocolate;
+    -fx-font-weight: bold;
+}
+.string {
+	-fx-fill : goldenrod;
+}
+
+.comment {
+	-fx-fill: grey;
+}
+
+.paragraph-box:has-caret {
+    -fx-background-color: #f2f9fc;
+}
+
+.error {
+	-fx-effect: dropshadow(one-pass-box, red , 2 ,0, 0, 0);
+}
