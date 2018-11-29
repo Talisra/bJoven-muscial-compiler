@@ -1,8 +1,11 @@
 import javax.sound.midi.Instrument;
+import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiChannel;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
+import javax.sound.midi.Sequence;
 import javax.sound.midi.Synthesizer;
+import javax.sound.midi.Track;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -10,7 +13,6 @@ import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -26,8 +28,13 @@ public class SoundGenerator extends Stage implements CompilerFinals {
 	private Synthesizer midiSynth;
 	private Instrument[] instr;
 	private MidiChannel[] mChannels;
+    private Sequence sequence;
+	private Track track;
 	private double gain;
 	private boolean isPlaying = true;
+
+    // MIDI Tick: The formula is 60000 / (BPM * PPQ) (milliseconds).
+
 	// private Button close = new Button(close);
 
 	public SoundGenerator(int volume) {
@@ -40,11 +47,17 @@ public class SoundGenerator extends Stage implements CompilerFinals {
 		this.setAlwaysOnTop(true);
 		play.setGraphic(play_icon);
 		play.setOnAction(e -> this.playOrPause());
+		stop.setOnAction(e -> this.stop());
 		stop.setGraphic(stop_icon);
 		buttonsPane.setPadding(new Insets(20));
 		buttonsPane.setSpacing(10);
 		buttonsPane.getChildren().addAll(play,stop);
 		pane.setBottom(buttonsPane);
+		try {
+			sequence = new Sequence(Sequence.PPQ,1);
+		} catch (InvalidMidiDataException e1) {
+			new ErrorStage("MIDI Error");
+		}
 
 		try {
 			midiSynth = MidiSystem.getSynthesizer();
@@ -68,11 +81,17 @@ public class SoundGenerator extends Stage implements CompilerFinals {
 		if (isPlaying) {
 			play.setGraphic(pause_icon);
 			isPlaying = false;
+			mChannels[0].allNotesOff();
 		}
 		else {
 			play.setGraphic(play_icon);
 			isPlaying = true;
 		}
+	}
+	
+	public void stop() {
+		play.setGraphic(play_icon);
+		isPlaying = false;
 	}
 	
 	public void run() {
@@ -84,7 +103,7 @@ public class SoundGenerator extends Stage implements CompilerFinals {
 			Thread.sleep(100); // wait time in milliseconds to control duration
 		} catch (InterruptedException e) {
 		}
-		mChannels[0].noteOff(60);// turn of the note
+		mChannels[0].noteOff(60);// turn off the note
 	}
 
 	public void playVolume() {

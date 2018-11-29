@@ -87,9 +87,10 @@ public class CompilerStage extends Application implements CompilerFinals {
 			workSpacePath = fm.getWorkPath();
 		} catch (FileNotFoundException e1) {
 			new ErrorStage(FILE_ERROR_MESSAGE);
-		} catch (IOException e1) {
+			} catch (IOException e1) {
 			new ErrorStage(IO_ERROR_MESSAGE);
-			e1.printStackTrace();
+			// assume we work from another computer or the file is corrupted in writing.
+			fm.resetWorkspace();
 		} catch (ProjectNotFoundException e1) {
 			new ErrorStage(WORKSPACE_ERROR_MESSAGE);
 		}
@@ -140,7 +141,7 @@ public class CompilerStage extends Application implements CompilerFinals {
 	}
 	
 	public void toggleMetronome(ActionEvent e) {
-
+		//TODO
 	}
 	
 	public void search() {
@@ -290,6 +291,9 @@ public class CompilerStage extends Application implements CompilerFinals {
 			Desktop.getDesktop().open(new File(workSpacePath));
 		} catch (IOException e) {
 			new ErrorStage(FILE_ERROR_MESSAGE);
+		} catch (IllegalArgumentException e) {
+			new ErrorStage(WORKSPACE_ERROR_MESSAGE);
+			fm.resetWorkspace();
 		}
 	}
 
@@ -1053,36 +1057,7 @@ public class CompilerStage extends Application implements CompilerFinals {
 
 	}
 
-	class ErrorStage extends Stage { // stage for error messages.
-		private ImageView error = FileManager.makeImageView(ERROR_MESSAGE);
-		private Label message = new Label();
-		private HBox pane = new HBox();
-		private VBox vbox = new VBox();
-		private Scene scene = new Scene(vbox);
-		private Button ok = new Button(OK);
 
-		public ErrorStage(String errorMessage) { // error message should be inserted in that constructor, the stage will
-													// adapt it.
-			this.message.setText(errorMessage);
-			this.initModality(Modality.APPLICATION_MODAL);
-			vbox.getChildren().add(pane);
-			vbox.getChildren().add(ok);
-			vbox.setAlignment(Pos.BASELINE_CENTER);
-			pane.setAlignment(Pos.BASELINE_CENTER);
-			pane.getChildren().add(message);
-			message.setGraphic(error);
-			this.setScene(scene);
-			this.setWidth(ERROR_STAGE_WIDTH + errorMessage.length() * 4);
-			this.setHeight(ERROR_STAGE_HEIGHT);
-			this.setTitle(ERROR_TITLE);
-			this.show();
-			this.setResizable(false);
-			this.setAlwaysOnTop(true);
-			ok.requestFocus();
-			ok.setPrefWidth(GENERIC_BUTTON_WIDTH);
-			ok.setOnAction(e -> this.close());
-		}
-	}
 
 	class BooleanStage extends Stage { // stage for Yes/No answers to gain a boolean decision from the user.
 		private ImageView quest = FileManager.makeImageView(QUESTION_MESSAGE);

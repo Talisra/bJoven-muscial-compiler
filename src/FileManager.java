@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
+import javax.swing.filechooser.FileSystemView;
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -16,12 +18,6 @@ public class FileManager implements CompilerFinals {
 	private boolean metroState = false;
 
 	public FileManager() {
-		// creates the directory for the savedfiles if not exists
-		File bjovenDir = new File("C:\\bJoven");
-		bjovenDir.mkdir();
-		File projectDir = new File("C:\\bJoven\\Projects");
-		projectDir.mkdir();
-
 		FileInputStream inputStream = null;
 		Image image;
 		try {
@@ -94,7 +90,7 @@ public class FileManager implements CompilerFinals {
 		String id = load.readUTF();
 		if (!id.equals(IDENTIFYING_STRING)) {
 			load.close();
-			return;
+			throw new FileNotFoundException("Settings file is corrupted or is not supported.");
 		}
 		initVolume = load.readInt();
 		metroState = load.readBoolean();
@@ -178,6 +174,24 @@ public class FileManager implements CompilerFinals {
 	public Project convertFileToProject(File f) throws ProjectNotFoundException {
 		Project p = loadProject(f.getPath());
 		return p;
+	}
+
+	public void resetWorkspace() { //recreate the workspace when there is a problem
+		// creates the directory for the saved files if not exists
+		
+		// gets the main drive to open a workspace.
+		String workspacePath = null;
+		File[] paths;
+		paths = File.listRoots();
+		//assumes the first drive is the drive for workspace
+		workspacePath = paths[0].toString() + "bJoven";
+		
+		File bjovenDir = new File(workspacePath);
+		bjovenDir.mkdir();
+		workspacePath += "\\Projects";
+		File projectDir = new File(workspacePath);
+		projectDir.mkdir();
+		this.workPath = workspacePath;
 	}
 }
 

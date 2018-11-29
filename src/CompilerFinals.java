@@ -29,9 +29,9 @@ public interface CompilerFinals {
 	final static int NEW_STAGE_WIDTH = 300;
 	final static int NEW_STAGE_HEIGHT = 125;
 	
-	final static int ERROR_STAGE_HEIGHT = 100;
-	final static int ERROR_STAGE_WIDTH = 150;
-	final static int QUEST_STAGE_HEIGHT = 125;
+	final static int ERROR_STAGE_HEIGHT = 120;
+	final static int ERROR_STAGE_WIDTH = 200;
+	final static int QUEST_STAGE_HEIGHT = 150;
 	final static int QUEST_STAGE_WIDTH = 250;
 	final static int GENERIC_BUTTON_WIDTH = 60;
 	final static int BOOLEAN_STAGE_SPACE = 20;
