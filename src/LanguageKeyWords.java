@@ -10,7 +10,7 @@ import org.fxmisc.richtext.model.StyleSpansBuilder;
 public class LanguageKeyWords {
 
     private static final String[] KEYWORDS = new String[] {
-            "whole", "half", "quart", "eight", "sixh",
+            "whole", "half", "quart", "eight", "sixh", "start", "play",
             
             "coda" , "fine" , "de capo"
     };
